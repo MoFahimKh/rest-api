@@ -53,7 +53,6 @@ The repository is organized as follows:
 The application relies on the following dependencies:
 
 - Express.js: A fast and minimalist web application framework for Node.js.
-- node-fetch: A library for making HTTP requests from Node.js.
 - Nodemon (dev dependency): A utility that automatically restarts the application when changes are detected during development.
 
 ## Contribution
