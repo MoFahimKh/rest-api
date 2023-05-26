@@ -40,7 +40,7 @@ app.get("/clinics", (req, res) => {
     });
   }
 
-  res.json(aa);
+  res.json(filteredClinics);
 });
 
 app.listen(3000, () => {
