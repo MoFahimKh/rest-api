@@ -26,14 +26,13 @@ app.get("/clinics", (req, res) => {
       (clinic) => clinic.stateCode === state
     );
   }
-  let aa = [];
 
   if (availability) {
     const { from, to } = parseAvailability(availability);
-    aa = filteredClinics.filter((clinic) => {
+    filteredClinics = filteredClinics.filter((clinic) => {
       if (clinic.opening && clinic.opening.from && clinic.opening.to) {
         const clinicFrom = clinic.opening.from;
-        const clinicTo =clinic.opening.to;
+        const clinicTo = clinic.opening.to;
         return clinicFrom >= from && clinicTo <= to;
       } else {
         return false;
