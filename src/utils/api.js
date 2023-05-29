@@ -1,6 +1,10 @@
-const api = async(url) =>{
+const api = async (url) => {
+  try {
     const response = await fetch(url);
-     const resJson = response.json();
-     return resJson;
+    const resJson = await response.json();
+    return resJson;
+  } catch {
+    console.log("response isnt fetched");
+  }
 };
 export default api;
