@@ -1,6 +1,7 @@
 import request from "supertest";
-import { app, fetchClinicsAndStartServer } from "../app.js";
+import { app } from "../app.js";
 import { clinics } from "../utils/constants.js";
+import { fetchClinicsAndStartServer } from "../route/clinics.js";
 
 // Before running the tests, fetch the clinics and start the server
 beforeAll(async () => {
@@ -38,47 +39,55 @@ describe("API Tests", () => {
     expect(response.statusCode).toBe(200);
     expect(response.body).toEqual([
       {
-        "clinicName": "Good Health Home",
-        "stateCode": "FL",
-        "opening": {
-          "from": "15:00",
-          "to": "20:00"
-        }
+        clinicName: "Good Health Home",
+        stateCode: "FL",
+        opening: {
+          from: "15:00",
+          to: "20:00",
+        },
       },
     ]);
   });
 
-    test("GET /clinics with availability filter should return filtered clinics", async () => {
-      const availability = "09:00-23:00";
-      const response = await request(app).get(
-        `/clinics?availability=${availability}`
-      );
-      expect(response.statusCode).toBe(200);
-      expect(response.body).toEqual([
-        {
-          "clinicName": "Good Health Home",
-          "stateCode": "FL",
-          "opening": {
-            "from": "15:00",
-            "to": "20:00"
-          }
+  test("GET /clinics with availability filter should return filtered clinics", async () => {
+    const availability = "09:00-23:00";
+    const response = await request(app).get(
+      `/clinics?availability=${availability}`
+    );
+    expect(response.statusCode).toBe(200);
+    expect(response.body).toEqual([
+      {
+        clinicName: "Good Health Home",
+        stateCode: "FL",
+        opening: {
+          from: "15:00",
+          to: "20:00",
         },
-        {
-          "clinicName": "National Veterinary Clinic",
-          "stateCode": "CA",
-          "opening": {
-            "from": "15:00",
-            "to": "22:30"
-          }
+      },
+      {
+        clinicName: "National Veterinary Clinic",
+        stateCode: "CA",
+        opening: {
+          from: "15:00",
+          to: "22:30",
         },
-        {
-          "clinicName": "City Vet Clinic",
-          "stateCode": "NV",
-          "opening": {
-            "from": "10:00",
-            "to": "22:00"
-          }
+      },
+      {
+        clinicName: "City Vet Clinic",
+        stateCode: "NV",
+        opening: {
+          from: "10:00",
+          to: "22:00",
         },
-      ]);
-    });
+      },
+    ]);
+  });
+});
+
+describe("API response in case of error", () => {
+  test("GET /clinics with status code 404 shold return error message ", async () => {
+    const response = await request(app).get("/clinics/?clinicName=wrong name");
+    expect(response.statusCode).toBe(404);
+    expect(response.body).toEqual("Sorry, No such Clinics found");
+  });
 });

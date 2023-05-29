@@ -28,10 +28,10 @@ router.get("/", (req, res) => {
   if (filteredClinics.length > 0) {
     res.json(filteredClinics);
   } else {
-    res.send("Sorry, No such Clinics found");
+    res.status(404).json("Sorry, No such Clinics found");
   }
 });
 
 fetchClinicsAndStartServer();
 
-export { router };
+export { router, fetchClinicsAndStartServer };
