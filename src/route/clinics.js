@@ -1,21 +1,17 @@
 import express from "express";
 import api from "../utils/api.js";
 import { dentalClinicsUrl, vetClinicsUrl } from "../utils/constants.js";
-import { filterClinics } from "../utils/filteredClinics.js";
+import { filterClinics } from "../utils/filterClinics.js";
 
 const router = express.Router();
 let clinics = [];
 
-// Function to fetch clinics and start the server
-const fetchClinicsAndStartServer = async () => {
+// Route handler for /clinics endpoint
+router.get("/", async (req, res) => {
   const dentalClinics = await api(dentalClinicsUrl);
   const vetClinics = await api(vetClinicsUrl);
 
   clinics = [...dentalClinics, ...vetClinics];
-};
-
-// Route handler for /clinics endpoint
-router.get("/", (req, res) => {
   const { clinicName, state, availability } = req.query;
 
   const filteredClinics = filterClinics(
@@ -32,6 +28,4 @@ router.get("/", (req, res) => {
   }
 });
 
-fetchClinicsAndStartServer();
-
-export { router, fetchClinicsAndStartServer };
+export { router };

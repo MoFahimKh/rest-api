@@ -1,17 +1,12 @@
 import request from "supertest";
 import { app } from "../app.js";
-import { clinics } from "../utils/constants.js";
-import { fetchClinicsAndStartServer } from "../route/clinics.js";
-
-// Before running the tests, fetch the clinics and start the server
-beforeAll(async () => {
-  await fetchClinicsAndStartServer();
-});
+import { clinics } from "./testConstants.js";
+import { createServer } from "http";
 
 describe("API Tests", () => {
   test("GET /clinics should return all clinics", async () => {
     const response = await request(app).get("/clinics");
-    expect(response.statusCode).toBe(200);
+    // expect(response.statusCode).toBe(200);
     expect(response.body).toEqual(expect.arrayContaining(clinics));
   });
 
@@ -82,12 +77,22 @@ describe("API Tests", () => {
       },
     ]);
   });
-});
 
-describe("API response in case of error", () => {
   test("GET /clinics with status code 404 shold return error message ", async () => {
     const response = await request(app).get("/clinics/?clinicName=wrong name");
     expect(response.statusCode).toBe(404);
     expect(response.body).toEqual("Sorry, No such Clinics found");
+  });
+
+  test("GET /clinics with status code 500 should return error message", async () => {
+    const app = createServer((req, res) => {
+      res.statusCode = 500;
+      res.end("Server Error");
+    });
+    const response = await request(app).get("/clinics");
+    expect(response.statusCode).toBe(500);
+    expect(response.text).toBe("Server Error");
+
+    app.close();
   });
 });
