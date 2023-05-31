@@ -4,7 +4,7 @@ const api = async (url) => {
     const resJson = await response.json();
     return resJson;
   } catch {
-    console.log("response isnt fetched");
+    console.log("response isn't fetched");
   }
 };
 export default api;
